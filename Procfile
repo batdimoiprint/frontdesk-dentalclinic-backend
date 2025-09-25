@@ -1,1 +1,1 @@
-web: cd backend && gunicorn backend.wsgi
+web: gunicorn clinic_system.wsgi --chdir backend
