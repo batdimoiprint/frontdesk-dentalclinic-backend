@@ -54,3 +54,20 @@ sqlparse==0.5.3
 
 # Packaging utilities
 packaging==25.0
+
+############################################################
+# 🔹 New dependencies for Supabase Auth (JWT verification)
+############################################################
+
+# JWT decoding & validation
+PyJWT[crypto]==2.9.0
+
+# Fetch Supabase JWKS (JSON Web Key Set) from URL
+python-jose==3.3.0
+cryptography==43.0.3
+
+# HTTP client for fetching JWKS if needed
+requests==2.32.3
+
+# (Optional) Supabase Python client – if you want to query Supabase directly
+supabase==2.10.0

@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import path, include  # ✅ make sure include is imported
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/common/', include('modules.common.urls')),
 ]

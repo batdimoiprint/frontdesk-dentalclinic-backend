@@ -1,6 +1,6 @@
 """
 Django settings for backend project.
-Using Django 5.2.6 with Supabase PostgreSQL.
+Using Django 5.2.6 with Supabase PostgreSQL + Supabase Auth.
 """
 
 from pathlib import Path
@@ -32,6 +32,11 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'corsheaders',
+
+    # Your modules
+    'modules.common',
+    'modules.receptionist',
+    'modules.cashier',
 ]
 
 # -------------------------
@@ -49,9 +54,9 @@ MIDDLEWARE = [
 ]
 
 # -------------------------
-# URLS & WSGI
+# URLS & WSGI / ASGI
 # -------------------------
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +73,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 # -------------------------
 # DATABASE (Supabase - PostgreSQL)
@@ -117,16 +123,39 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DJANGO REST FRAMEWORK
 # -------------------------
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'modules.common.authentication.SupabaseAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 # -------------------------
 # CORS SETTINGS
 # -------------------------
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="http://localhost:3000").split(",")
+
+# -------------------------
+# SUPABASE AUTH SETTINGS
+# -------------------------
+SUPABASE_URL = config("SUPABASE_URL", default="")
+SUPABASE_ANON_KEY = config("SUPABASE_ANON_KEY", default="")
+SUPABASE_SERVICE_ROLE_KEY = config("SUPABASE_SERVICE_ROLE_KEY", default="")
+
+# -------------------------
+# SUPABASE JWT VALIDATION
+# -------------------------
+SUPABASE_JWT_AUD = config("SUPABASE_JWT_AUD", default="authenticated")
+SUPABASE_JWT_ISS = config("SUPABASE_JWT_ISS", default=SUPABASE_URL)
+SUPABASE_JWT_SECRET = config("SUPABASE_JWT_SECRET", default="")
+
+# -------------------------
+# OPTIONAL: CACHE FOR ROLE LOOKUP
+# -------------------------
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-supabase-role-cache",
+    }
+}
