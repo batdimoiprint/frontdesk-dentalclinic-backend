@@ -123,13 +123,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DJANGO REST FRAMEWORK
 # -------------------------
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'modules.common.authentication.SupabaseAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": [],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
 }
+
 
 # -------------------------
 # CORS SETTINGS
